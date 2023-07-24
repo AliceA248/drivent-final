@@ -64,8 +64,8 @@ export function findTicketByEnrollmentId() {
     updatedAt: new Date(),
     TicketType: {
       id: 1,
-      name: 'Lorem ipsun',
-      price: 300,
+      name: 'Alice',
+      price: 200,
       isRemote: false,
       includesHotel: true,
       createdAt: new Date(),
@@ -76,24 +76,39 @@ export function findTicketByEnrollmentId() {
   return expected;
 }
 
+
+
+export function findRoomById() {
+  const expected: Room = {
+    id: 1,
+    name: 'Alice',
+    capacity: 5,
+    hotelId: 1,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  };
+
+  return expected;
+}
+
 export function enrollmentWithAddress() {
   const expected: Enrollment & { Address: Address[] } = {
     id: 1,
-    name: 'Foo Bar',
-    cpf: '47695530050',
+    name: 'Alice',
+    cpf: '15748559722',
     birthday: new Date(),
-    phone: '987654321',
+    phone: '983809862',
     userId: 1,
     createdAt: new Date(),
     updatedAt: new Date(),
     Address: [
       {
         id: 1,
-        cep: '22222222',
+        cep: '12354678',
         street: faker.address.streetName(),
         city: faker.address.city(),
         state: faker.address.state(),
-        number: '666',
+        number: '248',
         neighborhood: faker.address.streetName(),
         addressDetail: faker.address.streetName(),
         enrollmentId: 1,
@@ -101,19 +116,6 @@ export function enrollmentWithAddress() {
         updatedAt: new Date(),
       },
     ],
-  };
-
-  return expected;
-}
-
-export function findRoomById() {
-  const expected: Room = {
-    id: 1,
-    name: 'Lorem ipsun',
-    capacity: 2,
-    hotelId: 1,
-    createdAt: new Date(),
-    updatedAt: new Date(),
   };
 
   return expected;
@@ -129,7 +131,7 @@ export function findBookingByRoomId() {
       updatedAt: new Date(),
       Room: {
         id: 1,
-        name: 'Lorem ipsun',
+        name: 'Alice',
         capacity: 2,
         hotelId: 1,
         createdAt: new Date(),
@@ -151,7 +153,7 @@ export function findBookingsWithZeroCapacityRooms() {
       updatedAt: new Date(),
       Room: {
         id: 1,
-        name: 'Lorem ipsun',
+        name: 'Alice',
         capacity: 1,
         hotelId: 1,
         createdAt: new Date(),
@@ -166,7 +168,7 @@ export function findBookingsWithZeroCapacityRooms() {
 export function findRoomByIdWithZeroCapacity() {
   const expected: Room = {
     id: 1,
-    name: 'Lorem ipsun',
+    name: 'Alice',
     capacity: 1,
     hotelId: 1,
     createdAt: new Date(),
