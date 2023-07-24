@@ -21,12 +21,12 @@ describe('POST /users', () => {
     password: faker.internet.password(6),
   });
 
-  it('should respond with status 400 when body is not given', async () => {
+  it('respond with status 400 when body its not found', async () => {
     const response = await server.post('/users');
     expect(response.status).toBe(httpStatus.BAD_REQUEST);
   });
 
-  it('should respond with status 400 when body is not valid', async () => {
+  it('respond with status 400 when body is not valid', async () => {
     const invalidBody = { [faker.lorem.word()]: faker.lorem.word() };
     const response = await server.post('/users').send(invalidBody);
     expect(response.status).toBe(httpStatus.BAD_REQUEST);
@@ -39,7 +39,7 @@ describe('POST /users', () => {
       event = await createEvent();
     });
 
-    it('should respond with status 400 when current event did not start yet', async () => {
+    it('respond with status 400 when current event still doesnt exists', async () => {
       const futureEvent = await createEvent({ startsAt: dayjs().add(1, 'day').toDate() });
       const body = generateValidBody();
       const response = await server.post('/users').send(body).query({ eventId: futureEvent.id });
@@ -47,7 +47,7 @@ describe('POST /users', () => {
     });
 
     describe('when event has started', () => {
-      it('should respond with status 409 when there is an existing user with given email', async () => {
+      it('respond with status 409 when there is an existing user and email', async () => {
         const body = generateValidBody();
         await createUser(body);
         const response = await server.post('/users').send(body);
@@ -55,7 +55,7 @@ describe('POST /users', () => {
         expect(response.body).toEqual(duplicatedEmailError());
       });
 
-      it('should respond with status 201 and create user when given email is unique', async () => {
+      it('respond with status 201 and create user when email is unique', async () => {
         const body = generateValidBody();
         const response = await server.post('/users').send(body).query({ eventId: event.id });
         expect(response.status).toBe(httpStatus.CREATED);
@@ -65,13 +65,13 @@ describe('POST /users', () => {
         });
       });
 
-      it('should not return user password in the response', async () => {
+      it('not return user password', async () => {
         const body = generateValidBody();
         const response = await server.post('/users').send(body).query({ eventId: event.id });
         expect(response.body).not.toHaveProperty('password');
       });
 
-      it('should save the user in the database', async () => {
+      it('save user', async () => {
         const body = generateValidBody();
         const response = await server.post('/users').send(body).query({ eventId: event.id });
         const user = await prisma.user.findUnique({

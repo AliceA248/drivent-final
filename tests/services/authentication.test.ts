@@ -16,12 +16,12 @@ describe('signIn', () => {
     password: faker.internet.password(6),
   });
 
-  it('should throw InvalidCredentialError if there is no user for the given email', async () => {
+  it('throw InvalidCredentialError if there is no user for the provided email', async () => {
     const params = generateParams();
     await expect(authenticationService.signIn(params)).rejects.toEqual(invalidCredentialsError());
   });
 
-  it('should throw InvalidCredentialError if the given password is invalid', async () => {
+  it('throw InvalidCredentialError if the given password is invalid', async () => {
     const params = generateParams();
     await createUser({
       email: params.email,
@@ -32,7 +32,7 @@ describe('signIn', () => {
   });
 
   describe('when email and password are valid', () => {
-    it('should return user data and create a new session with a valid token', async () => {
+    it('return user data and create a new session with a valid token', async () => {
       const params = generateParams();
       const user = await createUser(params);
 

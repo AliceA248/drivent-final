@@ -13,12 +13,12 @@ beforeAll(async () => {
 });
 
 describe('GET /event', () => {
-  it('should respond with status 404 if there is no event', async () => {
+  it('respond with status 404 if there is no event', async () => {
     const response = await server.get('/event');
     expect(response.status).toBe(httpStatus.NOT_FOUND);
   });
 
-  it('should respond with status 200 and event data if there is an event', async () => {
+  it('if there is an event, respond with status 200 and event datat', async () => {
     const event = await createEvent();
 
     const response = await server.get('/event');

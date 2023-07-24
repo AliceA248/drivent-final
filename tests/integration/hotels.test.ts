@@ -16,18 +16,18 @@ beforeEach(async () => {
 });
 
 describe('GET /hotels', () => {
-  it('should respond with status 401 if no token is given', async () => {
+  it('respond with status 401 if no token is given', async () => {
     const response = await server.get('/hotels');
     expect(response.status).toBe(httpStatus.UNAUTHORIZED);
   });
 
-  it('should respond with status 401 if given token is not valid', async () => {
+  it('respond with status 401 if token is not valid', async () => {
     const token = 'invalid_token';
     const response = await server.get('/hotels').set('Authorization', `Bearer ${token}`);
     expect(response.status).toBe(httpStatus.UNAUTHORIZED);
   });
 
-  it('should respond with status 401 if there is no session for given token', async () => {
+  it('respond with status 401 if there is no session token', async () => {
     const userWithoutSession = await createUser();
     const token = generateValidToken(userWithoutSession);
     const response = await server.get('/hotels').set('Authorization', `Bearer ${token}`);
@@ -35,7 +35,7 @@ describe('GET /hotels', () => {
   });
 
   describe('when token is valid', () => {
-    it('should respond with status 402 when user ticket is remote', async () => {
+    it('respond with status 402 when user ticket is remote', async () => {
       const user = await createUser();
       const enrollment = await createEnrollmentWithAddress(user);
       const ticketType = await createTicketTypeRemote();
@@ -48,7 +48,7 @@ describe('GET /hotels', () => {
       expect(response.status).toEqual(httpStatus.PAYMENT_REQUIRED);
     });
 
-    it('should respond with status 404 when user has no enrollment', async () => {
+    it('respond with status 404 when user has no enrollment', async () => {
       const user = await createUser();
       const token = generateValidToken(user);
       await createTicketTypeRemote();
@@ -58,7 +58,7 @@ describe('GET /hotels', () => {
       expect(response.status).toEqual(httpStatus.NOT_FOUND);
     });
 
-    it('should respond with status 200 and a list of hotels', async () => {
+    it('respond with status 200 and a list of hotels', async () => {
       const user = await createUser();
       const enrollment = await createEnrollmentWithAddress(user);
       const ticketType = await createTicketHotelType();
@@ -81,7 +81,7 @@ describe('GET /hotels', () => {
       ]);
     });
 
-    it('should respond with status 200 and an empty array', async () => {
+    it('respond with status 200 and a empty array', async () => {
       const user = await createUser();
       const enrollment = await createEnrollmentWithAddress(user);
       const ticketType = await createTicketHotelType();

@@ -21,18 +21,18 @@ const server = supertest(app);
 describe('GET /tickets/types', () => {
   const validToken = async () => generateValidToken();
 
-  it('should respond with status 401 if user is not authenticated', async () => {
+  it('respond with status 401 if user is not authenticated', async () => {
     const response = await server.get('/tickets/types');
     expect(response.status).toBe(httpStatus.UNAUTHORIZED);
   });
 
-  it('should respond with status 401 if invalid token is given', async () => {
+  it('respond with status 401 when a invalid token is given', async () => {
     const token = faker.lorem.word();
     const response = await server.get('/tickets/types').set('Authorization', `Bearer ${token}`);
     expect(response.status).toBe(httpStatus.UNAUTHORIZED);
   });
 
-  it('should respond with status 401 if there is no session for given token', async () => {
+  it('respond with status 401 when there is no session for the token', async () => {
     const userWithoutSession = await createUser();
     const token = jwt.sign({ userId: userWithoutSession.id }, process.env.JWT_SECRET);
     const response = await server.get('/tickets/types').set('Authorization', `Bearer ${token}`);
@@ -40,13 +40,13 @@ describe('GET /tickets/types', () => {
   });
 
   describe('when user is authenticated', () => {
-    it('should respond with an empty array when there are no ticket types created', async () => {
+    it('respond with an empty array when there are no tickets types created', async () => {
       const token = await validToken();
       const response = await server.get('/tickets/types').set('Authorization', `Bearer ${token}`);
       expect(response.body).toEqual([]);
     });
 
-    it('should respond with status 200 and existing TicketTypes data', async () => {
+    it('respond with status 200 and existing TicketTypes', async () => {
       const token = await validToken();
       const ticketType = await createTicketType();
       const response = await server.get('/tickets/types').set('Authorization', `Bearer ${token}`);
@@ -69,18 +69,18 @@ describe('GET /tickets/types', () => {
 describe('GET /tickets', () => {
   const validToken = async () => generateValidToken();
 
-  it('should respond with status 401 if user is not authenticated', async () => {
+  it('respond with status 401 when the user is not authenticated', async () => {
     const response = await server.get('/tickets');
     expect(response.status).toBe(httpStatus.UNAUTHORIZED);
   });
 
-  it('should respond with status 401 if invalid token is given', async () => {
+  it('respond with status 401 when a invalid token is given', async () => {
     const token = faker.lorem.word();
     const response = await server.get('/tickets').set('Authorization', `Bearer ${token}`);
     expect(response.status).toBe(httpStatus.UNAUTHORIZED);
   });
 
-  it('should respond with status 401 if there is no session for given token', async () => {
+  it('respond with status 401 when there is no session for the token', async () => {
     const userWithoutSession = await createUser();
     const token = jwt.sign({ userId: userWithoutSession.id }, process.env.JWT_SECRET);
     const response = await server.get('/tickets').set('Authorization', `Bearer ${token}`);
@@ -103,13 +103,13 @@ describe('GET /tickets', () => {
       ticketId = ticket.id;
     });
 
-    it('should respond with status 404 when user doesnt have a ticket yet', async () => {
+    it('respond with status 404 when user doesnt have a ticket yet', async () => {
       await prisma.ticket.deleteMany(); // Delete all tickets to simulate user without ticket
       const response = await server.get('/tickets').set('Authorization', `Bearer ${token}`);
       expect(response.status).toEqual(httpStatus.NOT_FOUND);
     });
 
-    it('should respond with status 200 and with ticket data', async () => {
+    it('respond with status 200 and with ticket', async () => {
       const response = await server.get('/tickets').set('Authorization', `Bearer ${token}`);
       expect(response.status).toEqual(httpStatus.OK);
       expect(response.body).toEqual({
@@ -147,18 +147,18 @@ describe('POST /tickets', () => {
     ticketType = await createTicketType();
   });
 
-  it('should respond with status 401 if user is not authenticated', async () => {
+  it('respond with status 401 when user is not authenticated', async () => {
     const response = await server.post('/tickets');
     expect(response.status).toBe(httpStatus.UNAUTHORIZED);
   });
 
-  it('should respond with status 401 if invalid token is given', async () => {
+  it('respond with status 401 when a invalid token is given', async () => {
     const token = faker.lorem.word();
     const response = await server.post('/tickets').set('Authorization', `Bearer ${token}`);
     expect(response.status).toBe(httpStatus.UNAUTHORIZED);
   });
 
-  it('should respond with status 401 if there is no session for given token', async () => {
+  it('respond with status 401 when there is no session for the token', async () => {
     const userWithoutSession = await createUser();
     const token = jwt.sign({ userId: userWithoutSession.id }, process.env.JWT_SECRET);
     const response = await server.post('/tickets').set('Authorization', `Bearer ${token}`);
@@ -166,12 +166,12 @@ describe('POST /tickets', () => {
   });
 
   describe('when user is authenticated', () => {
-    it('should respond with status 400 when ticketTypeId is not present in body', async () => {
+    it('respond with status 400 when ticketTypeId is not present in body', async () => {
       const response = await server.post('/tickets').set('Authorization', `Bearer ${token}`).send({});
       expect(response.status).toEqual(httpStatus.BAD_REQUEST);
     });
 
-    it('should respond with status 404 when user doesnt have enrollment yet', async () => {
+    it('respond with status 404 when user doesnt have enrollment', async () => {
       await prisma.enrollment.deleteMany(); // Delete all enrollments to simulate user without enrollment
       const response = await server
         .post('/tickets')
@@ -180,7 +180,7 @@ describe('POST /tickets', () => {
       expect(response.status).toEqual(httpStatus.NOT_FOUND);
     });
 
-    it('should respond with status 201 and with ticket data', async () => {
+    it('respond with status 201 and ticket data', async () => {
       const response = await server
         .post('/tickets')
         .set('Authorization', `Bearer ${token}`)
@@ -205,7 +205,7 @@ describe('POST /tickets', () => {
       });
     });
 
-    it('should insert a new ticket in the database', async () => {
+    it('insert a new ticket', async () => {
       const beforeCount = await prisma.ticket.count();
       await server.post('/tickets').set('Authorization', `Bearer ${token}`).send({ ticketTypeId: ticketType.id });
       const afterCount = await prisma.ticket.count();

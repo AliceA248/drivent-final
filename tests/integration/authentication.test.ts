@@ -13,13 +13,13 @@ beforeAll(async () => {
 const server = supertest(app);
 
 describe('POST /auth/sign-in', () => {
-  it('should respond with status 400 when body is not given', async () => {
+  it('respond with status 400 when body is not provid', async () => {
     const response = await server.post('/auth/sign-in');
 
     expect(response.status).toBe(httpStatus.BAD_REQUEST);
   });
 
-  it('should respond with status 400 when body is not valid', async () => {
+  it('respond with status 400 when body its not valid', async () => {
     const response = await server.post('/auth/sign-in').send({ invalidField: 'value' });
 
     expect(response.status).toBe(httpStatus.BAD_REQUEST);
@@ -31,7 +31,7 @@ describe('POST /auth/sign-in', () => {
       password: faker.internet.password(6),
     });
 
-    it('should respond with status 401 if there is no user for given email', async () => {
+    it('respond with status 401 when there is no user for the provid email', async () => {
       const body = generateValidBody();
 
       const response = await server.post('/auth/sign-in').send(body);
@@ -39,7 +39,7 @@ describe('POST /auth/sign-in', () => {
       expect(response.status).toBe(httpStatus.UNAUTHORIZED);
     });
 
-    it('should respond with status 401 if there is a user for given email but password is not correct', async () => {
+    it('respond with status 401 when there is a user for provid email but the password doesnt match', async () => {
       const body = generateValidBody();
       await createUser(body);
 
@@ -52,7 +52,7 @@ describe('POST /auth/sign-in', () => {
     });
 
     describe('when credentials are valid', () => {
-      it('should respond with status 200', async () => {
+      it('respond with status 200', async () => {
         const body = generateValidBody();
         await createUser(body);
 
@@ -61,7 +61,7 @@ describe('POST /auth/sign-in', () => {
         expect(response.status).toBe(httpStatus.OK);
       });
 
-      it('should respond with user data', async () => {
+      it('respond with user data', async () => {
         const body = generateValidBody();
         const user = await createUser(body);
 
@@ -73,7 +73,7 @@ describe('POST /auth/sign-in', () => {
         });
       });
 
-      it('should respond with session token', async () => {
+      it('respond with session token', async () => {
         const body = generateValidBody();
         await createUser(body);
 

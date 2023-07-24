@@ -19,18 +19,18 @@ beforeAll(async () => {
 });
 
 describe('GET /enrollments', () => {
-  it('should respond with status 401 if no token is given', async () => {
+  it("respond status 401 if no token its given", async () => {
     const response = await server.get('/enrollments');
     expect(response.status).toBe(httpStatus.UNAUTHORIZED);
   });
 
-  it('should respond with status 401 if given token is not valid', async () => {
+  it('respond status 401 if given token its not valid', async () => {
     const token = faker.lorem.word();
     const response = await server.get('/enrollments').set('Authorization', `Bearer ${token}`);
     expect(response.status).toBe(httpStatus.UNAUTHORIZED);
   });
 
-  it('should respond with status 401 if there is no session for given token', async () => {
+  it('respond status 401 if there is no session', async () => {
     const userWithoutSession = await createUser();
     const token = jwt.sign({ userId: userWithoutSession.id }, process.env.JWT_SECRET);
     const response = await server.get('/enrollments').set('Authorization', `Bearer ${token}`);
@@ -38,13 +38,13 @@ describe('GET /enrollments', () => {
   });
 
   describe('when token is valid', () => {
-    it('should respond with status 204 when there is no enrollment for given user', async () => {
+    it('respond with status 204 when there is no enrollment for the user', async () => {
       const token = await generateValidToken();
       const response = await server.get('/enrollments').set('Authorization', `Bearer ${token}`);
       expect(response.status).toBe(httpStatus.NO_CONTENT);
     });
 
-    it('should respond with status 200 and enrollment data with address when there is an enrollment for given user', async () => {
+    it('respond with status 200 and enrollment data with address when there is an enrollment for the user', async () => {
       const user = await createUser();
       const enrollment = await createEnrollmentWithAddress(user);
       const token = await generateValidToken(user);
@@ -73,32 +73,32 @@ describe('GET /enrollments', () => {
 });
 
 describe('GET /enrollments/cep', () => {
-  it('should respond with status 200 when CEP is valid', async () => {
+  it('respond with status 200 when CEP is valid', async () => {
     const response = await server.get('/enrollments/cep?cep=04538132');
     const address = createhAddressWithCEP();
     expect(response.status).toBe(httpStatus.OK);
     expect(response.body).toEqual(address);
   });
 
-  it('should respond with status 204 when CEP is invalid', async () => {
+  it('respond with status 204 when CEP is invalid', async () => {
     const response = await server.get('/enrollments/cep?cep=00');
     expect(response.status).toBe(httpStatus.NO_CONTENT);
   });
 });
 
 describe('POST /enrollments', () => {
-  it('should respond with status 401 if no token is given', async () => {
+  it('respond with status 401 when no token is given', async () => {
     const response = await server.post('/enrollments');
     expect(response.status).toBe(httpStatus.UNAUTHORIZED);
   });
 
-  it('should respond with status 401 if given token is not valid', async () => {
+  it('respond with status 401 when the token is not valid', async () => {
     const token = faker.lorem.word();
     const response = await server.post('/enrollments').set('Authorization', `Bearer ${token}`);
     expect(response.status).toBe(httpStatus.UNAUTHORIZED);
   });
 
-  it('should respond with status 401 if there is no session for given token', async () => {
+  it('respond with status 401 when is no session for the token', async () => {
     const userWithoutSession = await createUser();
     const token = jwt.sign({ userId: userWithoutSession.id }, process.env.JWT_SECRET);
     const response = await server.post('/enrollments').set('Authorization', `Bearer ${token}`);
@@ -106,13 +106,13 @@ describe('POST /enrollments', () => {
   });
 
   describe('when token is valid', () => {
-    it('should respond with status 400 when body is not present', async () => {
+    it('respond with status 400 when body is not found', async () => {
       const token = await generateValidToken();
       const response = await server.post('/enrollments').set('Authorization', `Bearer ${token}`);
       expect(response.status).toBe(httpStatus.BAD_REQUEST);
     });
 
-    it('should respond with status 400 when body is not valid', async () => {
+    it('respond with status 400 when body is not valid', async () => {
       const token = await generateValidToken();
       const invalidBody = { [faker.lorem.word()]: faker.lorem.word() };
       const response = await server.post('/enrollments').set('Authorization', `Bearer ${token}`).send(invalidBody);
@@ -120,7 +120,7 @@ describe('POST /enrollments', () => {
     });
 
     describe('when body is valid', () => {
-      it('should respond with status 201 and create a new enrollment if there is none', async () => {
+      it('respond with status 201 and create a new enrollment', async () => {
         const validBody = generateValidEnrollmentBody();
         const token = await generateValidToken();
         const response = await server.post('/enrollments').set('Authorization', `Bearer ${token}`).send(validBody);
@@ -129,7 +129,7 @@ describe('POST /enrollments', () => {
         expect(enrollment).toBeDefined();
       });
 
-      it('should respond with status 200 and update enrollment if there is one already', async () => {
+      it('respond with status 200 and update enrollment if exists', async () => {
         const user = await createUser();
         const enrollment = await createEnrollmentWithAddress(user);
         const validBody = generateValidEnrollmentBody();
@@ -152,7 +152,7 @@ describe('POST /enrollments', () => {
     });
 
     describe('when body is invalid', () => {
-      it('should respond with status 400 and create a new enrollment if there is none', async () => {
+      it('respond with status 400 and create a new enrollment', async () => {
         const invalidBody = generateInvalidEnrollmentBody();
         const token = await generateValidToken();
         const response = await server.post('/enrollments').set('Authorization', `Bearer ${token}`).send(invalidBody);

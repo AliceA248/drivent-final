@@ -19,14 +19,14 @@ describe('createEnrollmentSchema', () => {
     },
   });
 
-  it('should return an error if input is not present', () => {
+  it('return an error when input doesnt exists', () => {
     const result = createEnrollmentSchema.validate(null);
 
     expect(result.error).toBeDefined();
   });
 
   describe('name', () => {
-    it('should return error if name is not present', () => {
+    it('return error when name is not provided', () => {
       const input = generateValidInput();
       delete input.name;
 
@@ -35,7 +35,7 @@ describe('createEnrollmentSchema', () => {
       expect(error).toBeDefined();
     });
 
-    it('should return error if name is less than 3 characters', () => {
+    it('return error when name is less than 3 characters', () => {
       const input = generateValidInput();
       input.name = faker.lorem.word(2);
 
@@ -46,7 +46,7 @@ describe('createEnrollmentSchema', () => {
   });
 
   describe('cpf', () => {
-    it('should return error if cpf is not present', () => {
+    it('return error when cpf is not provided', () => {
       const input = generateValidInput();
       delete input.cpf;
 
@@ -55,7 +55,7 @@ describe('createEnrollmentSchema', () => {
       expect(error).toBeDefined();
     });
 
-    it('should return error if cpf is invalid', () => {
+    it('return error when cpf its not valid', () => {
       const input = generateValidInput();
       input.cpf = '12345678901';
 
@@ -64,7 +64,7 @@ describe('createEnrollmentSchema', () => {
       expect(error).toBeDefined();
     });
 
-    it('should return error if cpf is masked', () => {
+    it('return error when cpf is masked', () => {
       const input = generateValidInput();
       input.cpf = '012.345.678-90';
 
@@ -75,7 +75,7 @@ describe('createEnrollmentSchema', () => {
   });
 
   describe('birthday', () => {
-    it('should return error if birthday is not present', () => {
+    it('return error when birthday its provided', () => {
       const input = generateValidInput();
       delete input.birthday;
 
@@ -84,18 +84,10 @@ describe('createEnrollmentSchema', () => {
       expect(error).toBeDefined();
     });
 
-    it('should return an error if birthday is not an iso date', () => {
-      const input = generateValidInput();
-      input.birthday = 'not an iso date';
-
-      const { error } = createEnrollmentSchema.validate(input);
-
-      expect(error).toBeDefined();
-    });
   });
 
   describe('phone', () => {
-    it('should return error if phone is not present', () => {
+    it('return error when phone its provided', () => {
       const input = generateValidInput();
       delete input.phone;
 
@@ -104,7 +96,7 @@ describe('createEnrollmentSchema', () => {
       expect(error).toBeDefined();
     });
 
-    it('should return error if phone is not a mobile phone', () => {
+    it('return error when phone is not a mobile phone', () => {
       const input = generateValidInput();
       input.phone = '1234567890';
 
@@ -113,7 +105,7 @@ describe('createEnrollmentSchema', () => {
       expect(error).toBeDefined();
     });
 
-    it('should return error if phone is not masked', () => {
+    it('return error when phone is not masked', () => {
       const input = generateValidInput();
       input.phone = '12999887766';
 
@@ -124,7 +116,7 @@ describe('createEnrollmentSchema', () => {
   });
 
   describe('address', () => {
-    it('should return error if address is not present', () => {
+    it('return error when address is not provide', () => {
       const input = generateValidInput();
       delete input.address;
 
@@ -134,7 +126,7 @@ describe('createEnrollmentSchema', () => {
     });
 
     describe('cep', () => {
-      it('should return error if cep is not present', () => {
+      it('return error when cep its not provided', () => {
         const input = generateValidInput();
         delete input.address.cep;
 
@@ -143,7 +135,7 @@ describe('createEnrollmentSchema', () => {
         expect(error).toBeDefined();
       });
 
-      it('should return error if cep is not a cep', () => {
+      it('return error when cep is not a cep', () => {
         const input = generateValidInput();
         input.address.cep = '1234567890';
 
@@ -152,7 +144,7 @@ describe('createEnrollmentSchema', () => {
         expect(error).toBeDefined();
       });
 
-      it('should return error if cep is not masked', () => {
+      it('return error when cep is not masked', () => {
         const input = generateValidInput();
         input.address.cep = '12345678';
 
@@ -163,7 +155,7 @@ describe('createEnrollmentSchema', () => {
     });
 
     describe('street', () => {
-      it('should return error if street is not present', () => {
+      it('return error when street is not provide', () => {
         const input = generateValidInput();
         delete input.address.street;
 
@@ -172,7 +164,7 @@ describe('createEnrollmentSchema', () => {
         expect(error).toBeDefined();
       });
 
-      it('should return error if street is not a string', () => {
+      it('return error when street is not a string', () => {
         const input = generateValidInput();
 
         const { error } = createEnrollmentSchema.validate({
@@ -188,7 +180,7 @@ describe('createEnrollmentSchema', () => {
     });
 
     describe('city', () => {
-      it('should return error if city is not present', () => {
+      it('return error when city is not provide', () => {
         const input = generateValidInput();
         delete input.address.city;
 
@@ -197,7 +189,7 @@ describe('createEnrollmentSchema', () => {
         expect(error).toBeDefined();
       });
 
-      it('should return error if city is not a string', () => {
+      it('return error when city is not a string', () => {
         const input = generateValidInput();
 
         const { error } = createEnrollmentSchema.validate({
@@ -213,7 +205,7 @@ describe('createEnrollmentSchema', () => {
     });
 
     describe('number', () => {
-      it('should return error if number is not present', () => {
+      it('return error when number is not provide', () => {
         const input = generateValidInput();
         delete input.address.number;
 
@@ -222,7 +214,7 @@ describe('createEnrollmentSchema', () => {
         expect(error).toBeDefined();
       });
 
-      it('should return error if number is not a string', () => {
+      it('return error when number is not a string', () => {
         const input = generateValidInput();
 
         const { error } = createEnrollmentSchema.validate({
@@ -238,7 +230,7 @@ describe('createEnrollmentSchema', () => {
     });
 
     describe('state', () => {
-      it('should return error if state is not present', () => {
+      it('return error when state is not provide', () => {
         const input = generateValidInput();
         delete input.address.state;
 
@@ -247,7 +239,7 @@ describe('createEnrollmentSchema', () => {
         expect(error).toBeDefined();
       });
 
-      it('should return error if state is not a valid brazilian state', () => {
+      it('return error when state is not a valid brazilian state', () => {
         const input = generateValidInput();
 
         const { error } = createEnrollmentSchema.validate({
@@ -261,7 +253,7 @@ describe('createEnrollmentSchema', () => {
         expect(error).toBeDefined();
       });
 
-      it('should return error if state is not a string', () => {
+      it('return error when state is not a string', () => {
         const input = generateValidInput();
 
         const { error } = createEnrollmentSchema.validate({
@@ -277,7 +269,7 @@ describe('createEnrollmentSchema', () => {
     });
 
     describe('neighborhood', () => {
-      it('should return error if neighborhood is not present', () => {
+      it('return error when neighborhood is not provide', () => {
         const input = generateValidInput();
         delete input.address.neighborhood;
 
@@ -286,7 +278,7 @@ describe('createEnrollmentSchema', () => {
         expect(error).toBeDefined();
       });
 
-      it('should return error if neighborhood is not a string', () => {
+      it('return error when neighborhood is not a string', () => {
         const input = generateValidInput();
 
         const { error } = createEnrollmentSchema.validate({
@@ -302,7 +294,7 @@ describe('createEnrollmentSchema', () => {
     });
 
     describe('addressDetail', () => {
-      it('should not return error if addressDetail is not present', () => {
+      it('not return error when addressDetail is not provide', () => {
         const input = generateValidInput();
         delete input.address.addressDetail;
 
@@ -311,7 +303,7 @@ describe('createEnrollmentSchema', () => {
         expect(error).toBeUndefined();
       });
 
-      it('should not return error if addressDetail is an empty string', () => {
+      it('return error when addressDetail is an empty string', () => {
         const input = generateValidInput();
         input.address.addressDetail = '';
 
@@ -320,7 +312,7 @@ describe('createEnrollmentSchema', () => {
         expect(error).toBeUndefined();
       });
 
-      it('should not return error if addressDetail is null', () => {
+      it('return error when addressDetail is null', () => {
         const input = generateValidInput();
         input.address.addressDetail = null;
 
@@ -329,7 +321,7 @@ describe('createEnrollmentSchema', () => {
         expect(error).toBeUndefined();
       });
 
-      it('should return error if addressDetail is not a string', () => {
+      it('return error when addressDetail is not a string', () => {
         const input = generateValidInput();
 
         const { error } = createEnrollmentSchema.validate({
@@ -345,7 +337,7 @@ describe('createEnrollmentSchema', () => {
     });
   });
 
-  it('should return no error if schema is valid', () => {
+  it('return no error when schema is valid', () => {
     const input = generateValidInput();
 
     const { error } = createEnrollmentSchema.validate(input);

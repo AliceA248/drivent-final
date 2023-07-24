@@ -32,7 +32,7 @@ const createValidToken = async (user?: any) => {
 
 describe('GET /payments', () => {
   describe('When user is not authenticated', () => {
-    it('should respond with status 401', async () => {
+    it('respond with status 401', async () => {
       const response = await server.get('/payments');
       expect(response.status).toBe(httpStatus.UNAUTHORIZED);
     });
@@ -54,17 +54,17 @@ describe('GET /payments', () => {
       ticketId = ticket.id;
     });
 
-    it('should respond with status 400 if query param ticketId is missing', async () => {
+    it('respond with status 400 if query param ticketId is not found', async () => {
       const response = await server.get('/payments').set('Authorization', `Bearer ${token}`);
       expect(response.status).toEqual(httpStatus.BAD_REQUEST);
     });
 
-    it('should respond with status 404 when given ticket doesnt exist', async () => {
+    it('respond with status 404 when given ticket doesnt exist', async () => {
       const response = await server.get('/payments?ticketId=1').set('Authorization', `Bearer ${token}`);
       expect(response.status).toEqual(httpStatus.NOT_FOUND);
     });
 
-    it('should respond with status 401 when user doesnt own given ticket', async () => {
+    it('respond with status 401 when the user doesnt have a ticket', async () => {
       const otherUser = await createUser();
       const otherUserEnrollment = await createEnrollmentWithAddress(otherUser);
       const ticket = await createTicket(otherUserEnrollment.id, ticketType.id, TicketStatus.RESERVED);
@@ -72,7 +72,7 @@ describe('GET /payments', () => {
       expect(response.status).toEqual(httpStatus.UNAUTHORIZED);
     });
 
-    it('should respond with status 200 and with payment data', async () => {
+    it('respond with status 200 and with payment data', async () => {
       const payment = await createPayment(ticketId, ticketType.price);
       const response = await server.get(`/payments?ticketId=${ticketId}`).set('Authorization', `Bearer ${token}`);
       expect(response.status).toEqual(httpStatus.OK);
@@ -91,7 +91,7 @@ describe('GET /payments', () => {
 
 describe('POST /payments/process', () => {
   describe('When user is not authenticated', () => {
-    it('should respond with status 401', async () => {
+    it('respond with status 401', async () => {
       const response = await server.post('/payments/process');
       expect(response.status).toBe(httpStatus.UNAUTHORIZED);
     });
@@ -113,25 +113,25 @@ describe('POST /payments/process', () => {
       ticketId = ticket.id;
     });
 
-    it('should respond with status 400 if body param ticketId is missing', async () => {
+    it('respond with status 400 if body param ticketId is missing', async () => {
       const body = { cardData: generateDataOfCreditCard() };
       const response = await server.post('/payments/process').set('Authorization', `Bearer ${token}`).send(body);
       expect(response.status).toEqual(httpStatus.BAD_REQUEST);
     });
 
-    it('should respond with status 400 if body param cardData is missing', async () => {
+    it('respond with status 400 if body param cardData is missing', async () => {
       const body = { ticketId: ticketId };
       const response = await server.post('/payments/process').set('Authorization', `Bearer ${token}`).send(body);
       expect(response.status).toEqual(httpStatus.BAD_REQUEST);
     });
 
-    it('should respond with status 404 when given ticket doesnt exist', async () => {
+    it('respond with status 404 when given ticket doesnt exist', async () => {
       const body = { ticketId: 1, cardData: generateDataOfCreditCard() };
       const response = await server.post('/payments/process').set('Authorization', `Bearer ${token}`).send(body);
       expect(response.status).toEqual(httpStatus.NOT_FOUND);
     });
 
-    it('should respond with status 401 when user doesnt own given ticket', async () => {
+    it('respond with status 401 when user doesnt have given ticket', async () => {
       const otherUser = await createUser();
       const otherUserEnrollment = await createEnrollmentWithAddress(otherUser);
       const ticket = await createTicket(otherUserEnrollment.id, ticketType.id, TicketStatus.RESERVED);
@@ -140,7 +140,7 @@ describe('POST /payments/process', () => {
       expect(response.status).toEqual(httpStatus.UNAUTHORIZED);
     });
 
-    it('should respond with status 200 and with payment data', async () => {
+    it('respond with status 200 and with payment data', async () => {
       const body = { ticketId: ticketId, cardData: generateDataOfCreditCard() };
       const response = await server.post('/payments/process').set('Authorization', `Bearer ${token}`).send(body);
       expect(response.status).toEqual(httpStatus.OK);
@@ -155,7 +155,7 @@ describe('POST /payments/process', () => {
       });
     });
 
-    it('should insert a new payment in the database', async () => {
+    it('insert a new payment', async () => {
       const beforeCount = await prisma.payment.count();
       const body = { ticketId: ticketId, cardData: generateDataOfCreditCard() };
       await server.post('/payments/process').set('Authorization', `Bearer ${token}`).send(body);
@@ -164,7 +164,7 @@ describe('POST /payments/process', () => {
       expect(afterCount).toEqual(1);
     });
 
-    it('should set ticket status as PAID', async () => {
+    it('change ticket status to PAID', async () => {
       const body = { ticketId: ticketId, cardData: generateDataOfCreditCard() };
       await server.post('/payments/process').set('Authorization', `Bearer ${token}`).send(body);
       const updatedTicket = await prisma.ticket.findUnique({ where: { id: ticketId } });

@@ -8,7 +8,7 @@ describe('signInSchema', () => {
   });
 
   describe('when email is not valid', () => {
-    it('should return error if email is not present', () => {
+    it('return error if email is not provide', () => {
       const input = generateValidInput();
       delete input.email;
 
@@ -17,7 +17,7 @@ describe('signInSchema', () => {
       expect(error).toBeDefined();
     });
 
-    it('should return error if email does not follow valid email format', () => {
+    it('return error if email does not have a valid format', () => {
       const input = generateValidInput();
       input.email = faker.lorem.word();
 
@@ -28,7 +28,7 @@ describe('signInSchema', () => {
   });
 
   describe('when password is not valid', () => {
-    it('should return error if password is not present', () => {
+    it('return error if password is not provide', () => {
       const input = generateValidInput();
       delete input.password;
 
@@ -37,7 +37,7 @@ describe('signInSchema', () => {
       expect(error).toBeDefined();
     });
 
-    it('should return error if password is not a string', () => {
+    it('return error if password is not a string', () => {
       const input = generateValidInput();
 
       const { error } = signInSchema.validate({ ...input, password: faker.datatype.number() });
@@ -46,7 +46,7 @@ describe('signInSchema', () => {
     });
   });
 
-  it('should return no error if input is valid', () => {
+  it('return no error when the input is valid', () => {
     const input = generateValidInput();
 
     const { error } = signInSchema.validate(input);

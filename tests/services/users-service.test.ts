@@ -12,7 +12,7 @@ beforeEach(async () => {
 });
 
 describe('createUser', () => {
-  it('should throw duplicatedUserError if there is a user with the given email', async () => {
+  it('throw duplicatedUserError if there is a user with the email provided', async () => {
     const existingUser = await createUserSeed();
     await createEventSeed();
 
@@ -21,13 +21,13 @@ describe('createUser', () => {
         email: existingUser.email,
         password: faker.internet.password(6),
       });
-      fail('should throw duplicatedUserError');
+      fail('throw duplicatedUserError');
     } catch (error) {
       expect(error).toEqual(duplicatedEmailError());
     }
   });
 
-  it('should create user when the given email is unique', async () => {
+  it('create user when the given email is unique', async () => {
     const user = await userService.createUser({
       email: faker.internet.email(),
       password: faker.internet.password(6),
@@ -46,7 +46,7 @@ describe('createUser', () => {
     );
   });
 
-  it('should hash user password', async () => {
+  it('hash user password', async () => {
     const rawPassword = faker.internet.password(6);
     const user = await userService.createUser({
       email: faker.internet.email(),

@@ -30,13 +30,13 @@ const setupBookingScenario = async () => {
 };
 
 describe('GET /booking', () => {
-  it('should respond with status 401 if no token is given', async () => {
+  it('respond with status 401 when no token is provide', async () => {
     const response = await server.get('/booking');
 
     expect(response.status).toBe(httpStatus.UNAUTHORIZED);
   });
 
-  it('should respond with status 401 if given token is not valid', async () => {
+  it('respond with status 401 when provide token is not valid', async () => {
     const token = faker.lorem.word();
 
     const response = await server.get('/booking').set('Authorization', `Bearer ${token}`);
@@ -44,7 +44,7 @@ describe('GET /booking', () => {
     expect(response.status).toBe(httpStatus.UNAUTHORIZED);
   });
 
-  it('should respond with status 401 if there is no session for given token', async () => {
+  it('respond with status 401 when there is no session for provide token', async () => {
     const userWithoutSession = await createUser();
     const token = jwt.sign({ userId: userWithoutSession.id }, process.env.JWT_SECRET);
 
@@ -54,7 +54,7 @@ describe('GET /booking', () => {
   });
 
   describe('when token is valid', () => {
-    it('should respond with status 404 when user has not a booking', async () => {
+    it('respond with status 404 when user has not a booking', async () => {
       const { token } = await setupBookingScenario();
 
       const response = await server.get('/booking').set('Authorization', `Bearer ${token}`);
@@ -62,7 +62,7 @@ describe('GET /booking', () => {
       expect(response.status).toEqual(httpStatus.NOT_FOUND);
     });
 
-    it('should respond with status 200 when user has a booking', async () => {
+    it('respond with status 200 when user has a booking', async () => {
       const { user, token, room } = await setupBookingScenario();
       const booking = await createBooking({
         userId: user.id,
@@ -94,14 +94,14 @@ function createValidBody() {
 }
 
 describe('POST /booking', () => {
-  it('should respond with status 401 if no token is given', async () => {
+  it('respond with status 401 when no token is provide', async () => {
     const validBody = createValidBody();
     const response = await server.post('/booking').send(validBody);
 
     expect(response.status).toBe(httpStatus.UNAUTHORIZED);
   });
 
-  it('should respond with status 401 if given token is not valid', async () => {
+  it('respond with status 401 when provide token is not valid', async () => {
     const token = faker.lorem.word();
     const validBody = createValidBody();
     const response = await server.post('/booking').set('Authorization', `Bearer ${token}`).send(validBody);
@@ -109,7 +109,7 @@ describe('POST /booking', () => {
     expect(response.status).toBe(httpStatus.UNAUTHORIZED);
   });
 
-  it('should respond with status 401 if there is no session for given token', async () => {
+  it('respond with status 401 when there is no session for provide token', async () => {
     const userWithoutSession = await createUser();
     const token = jwt.sign({ userId: userWithoutSession.id }, process.env.JWT_SECRET);
     const validBody = createValidBody();
@@ -119,7 +119,7 @@ describe('POST /booking', () => {
   });
 
   describe('when token is valid', () => {
-    it('should respond with status 200 with a valid body', async () => {
+    it('respond with status 200 with a valid body', async () => {
       const { token, room } = await setupBookingScenario();
       const response = await server.post('/booking').set('Authorization', `Bearer ${token}`).send({
         roomId: room.id,
@@ -128,7 +128,7 @@ describe('POST /booking', () => {
       expect(response.status).toEqual(httpStatus.OK);
     });
 
-    it('should respond with status 400 with a invalid body', async () => {
+    it('respond with status 400 with a invalid body', async () => {
       const { token } = await setupBookingScenario();
       const response = await server.post('/booking').set('Authorization', `Bearer ${token}`).send({
         roomId: 0,
@@ -137,7 +137,7 @@ describe('POST /booking', () => {
       expect(response.status).toEqual(httpStatus.BAD_REQUEST);
     });
 
-    it("should respond with status 404 with a invalid body - there's not roomId", async () => {
+    it("respond with status 404 with a invalid body - there's not roomId", async () => {
       const { token, room } = await setupBookingScenario();
       const response = await server.post('/booking').set('Authorization', `Bearer ${token}`).send({
         roomId: room.id + 1,
@@ -146,7 +146,7 @@ describe('POST /booking', () => {
       expect(response.status).toEqual(httpStatus.NOT_FOUND);
     });
 
-    it("should respond with status 403 with a invalid body - there's not vacancy", async () => {
+    it("respond with status 403 with a invalid body - there's not vacancy", async () => {
       const { token, room } = await setupBookingScenario();
       await createBooking({
         userId: room.id,
@@ -168,7 +168,7 @@ describe('POST /booking', () => {
       expect(response.status).toEqual(httpStatus.FORBIDDEN);
     });
 
-    it('should respond with status 403 if user has not enrollment', async () => {
+    it('respond with status 403 when user has not enrollment', async () => {
       const user = await createUser();
       const token = await generateValidToken(user);
       await createTicketHotelType();
@@ -183,7 +183,7 @@ describe('POST /booking', () => {
       expect(response.status).toEqual(httpStatus.FORBIDDEN);
     });
 
-    it('should respond with status 403 if user has not paymented ticket', async () => {
+    it('respond with status 403 when user has not paymented ticket', async () => {
       const user = await createUser();
       const token = await generateValidToken(user);
       const enrollment = await createEnrollmentWithAddress(user);
@@ -203,14 +203,14 @@ describe('POST /booking', () => {
 });
 
 describe('PUT /booking', () => {
-  it('should respond with status 401 if no token is given', async () => {
+  it('respond with status 401 when no token is provide', async () => {
     const validBody = createValidBody();
     const response = await server.put('/booking/1').send(validBody);
 
     expect(response.status).toBe(httpStatus.UNAUTHORIZED);
   });
 
-  it('should respond with status 401 if given token is not valid', async () => {
+  it('respond with status 401 when provide token is not valid', async () => {
     const token = faker.lorem.word();
     const validBody = createValidBody();
     const response = await server.put('/booking/1').set('Authorization', `Bearer ${token}`).send(validBody);
@@ -218,7 +218,7 @@ describe('PUT /booking', () => {
     expect(response.status).toBe(httpStatus.UNAUTHORIZED);
   });
 
-  it('should respond with status 401 if there is no session for given token', async () => {
+  it('respond with status 401 when there is no session for provide token', async () => {
     const userWithoutSession = await createUser();
     const token = jwt.sign({ userId: userWithoutSession.id }, process.env.JWT_SECRET);
     const validBody = createValidBody();
@@ -228,7 +228,7 @@ describe('PUT /booking', () => {
   });
 
   describe('when token is valid', () => {
-    it('should respond with status 200 with a valid body', async () => {
+    it('respond with status 200 with a valid body', async () => {
       const { user, token, room, hotel } = await setupBookingScenario();
       const booking = await createBooking({
         roomId: room.id,
@@ -244,7 +244,7 @@ describe('PUT /booking', () => {
       expect(response.status).toEqual(httpStatus.OK);
     });
 
-    it('should respond with status 400 with invalid bookingId', async () => {
+    it('respond with status 400 with invalid bookingId', async () => {
       const { user, token, room } = await setupBookingScenario();
       await createBooking({
         roomId: room.id,
@@ -260,7 +260,7 @@ describe('PUT /booking', () => {
       expect(response.status).toEqual(httpStatus.BAD_REQUEST);
     });
 
-    it('should respond with status 400 with a invalid body', async () => {
+    it('respond with status 400 with a invalid body', async () => {
       const { user, token, room } = await setupBookingScenario();
       const booking = await createBooking({
         roomId: room.id,
@@ -274,7 +274,7 @@ describe('PUT /booking', () => {
       expect(response.status).toEqual(httpStatus.BAD_REQUEST);
     });
 
-    it("should respond with status 404 with a invalid body - there's no roomId", async () => {
+    it("respond with status 404 with a invalid body - there's no roomId", async () => {
       const { user, token, room } = await setupBookingScenario();
       const booking = await createBooking({
         roomId: room.id,
@@ -291,7 +291,7 @@ describe('PUT /booking', () => {
       expect(response.status).toEqual(httpStatus.NOT_FOUND);
     });
 
-    it("should respond with status 403 with a invalid body - there's not vacancy", async () => {
+    it("respond with status 403 with a invalid body - there's not vacancy", async () => {
       const { token, room } = await setupBookingScenario();
       await createBooking({
         userId: room.id,
@@ -313,7 +313,7 @@ describe('PUT /booking', () => {
       expect(response.status).toEqual(httpStatus.FORBIDDEN);
     });
 
-    it('should respond with status 404 when user has not a booking', async () => {
+    it('respond with status 404 when user has not a booking', async () => {
       const { token, room } = await setupBookingScenario();
       const otherUser = await createUser();
       const otherUserBooking = await createBooking({
@@ -335,20 +335,20 @@ describe('PUT /booking', () => {
 
 
 describe('DELETE /booking', () => {
-  it('should respond with status 401 if no token is given', async () => {
+  it('respond with status 401 when no token is provide', async () => {
     const response = await server.delete('/booking/1');
 
     expect(response.status).toBe(httpStatus.UNAUTHORIZED);
   });
 
-  it('should respond with status 401 if given token is not valid', async () => {
+  it('respond with status 401 when provide token is not valid', async () => {
     const token = faker.lorem.word();
     const response = await server.delete('/booking/1').set('Authorization', `Bearer ${token}`);
 
     expect(response.status).toBe(httpStatus.UNAUTHORIZED);
   });
 
-  it('should respond with status 401 if there is no session for given token', async () => {
+  it('respond with status 401 when there is no session for provide token', async () => {
     const userWithoutSession = await createUser();
     const token = jwt.sign({ userId: userWithoutSession.id }, process.env.JWT_SECRET);
     const response = await server.delete('/booking/1').set('Authorization', `Bearer ${token}`);
@@ -357,7 +357,7 @@ describe('DELETE /booking', () => {
   });
 
   describe('when token is valid', () => {
-    it('should respond with status 200 when user cancels their booking', async () => {
+    it('respond with status 200 when user cancels their booking', async () => {
       const { user, token, room } = await setupBookingScenario();
       const booking = await createBooking({
         roomId: room.id,
@@ -369,7 +369,7 @@ describe('DELETE /booking', () => {
       expect(response.status).toEqual(httpStatus.OK);
     });
 
-    it('should respond with status 400 with invalid bookingId', async () => {
+    it('respond with status 400 with invalid bookingId', async () => {
       const { token } = await setupBookingScenario();
 
       const response = await server.delete('/booking/0').set('Authorization', `Bearer ${token}`);
@@ -377,7 +377,7 @@ describe('DELETE /booking', () => {
       expect(response.status).toEqual(httpStatus.BAD_REQUEST);
     });
 
-    it("should respond with status 403 when user tries to cancel someone else's booking", async () => {
+    it("respond with status 403 when user tries to cancel someone else's booking", async () => {
       const { token, room } = await setupBookingScenario();
       const otherUser = await createUser();
       const otherUserBooking = await createBooking({
