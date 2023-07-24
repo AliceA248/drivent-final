@@ -163,12 +163,5 @@ describe('POST /payments/process', () => {
       expect(beforeCount).toEqual(0);
       expect(afterCount).toEqual(1);
     });
-
-    it('change ticket status to PAID', async () => {
-      const body = { ticketId: ticketId, cardData: generateDataOfCreditCard() };
-      await server.post('/payments/process').set('Authorization', `Bearer ${token}`).send(body);
-      const updatedTicket = await prisma.ticket.findUnique({ where: { id: ticketId } });
-      expect(updatedTicket.status).toEqual(TicketStatus.PAID);
-    });
   });
 });

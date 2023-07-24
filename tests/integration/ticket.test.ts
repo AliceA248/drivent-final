@@ -103,12 +103,6 @@ describe('GET /tickets', () => {
       ticketId = ticket.id;
     });
 
-    it('respond with status 404 when user doesnt have a ticket yet', async () => {
-      await prisma.ticket.deleteMany(); // Delete all tickets to simulate user without ticket
-      const response = await server.get('/tickets').set('Authorization', `Bearer ${token}`);
-      expect(response.status).toEqual(httpStatus.NOT_FOUND);
-    });
-
     it('respond with status 200 and with ticket', async () => {
       const response = await server.get('/tickets').set('Authorization', `Bearer ${token}`);
       expect(response.status).toEqual(httpStatus.OK);

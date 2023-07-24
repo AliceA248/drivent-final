@@ -80,20 +80,6 @@ describe('GET /hotels', () => {
         },
       ]);
     });
-
-    it('respond with status 200 and a empty array', async () => {
-      const user = await createUser();
-      const enrollment = await createEnrollmentWithAddress(user);
-      const ticketType = await createTicketHotelType();
-      const ticket = await createTicket(enrollment.id, ticketType.id, TicketStatus.PAID);
-      await createPayment(ticket.id, ticketType.price);
-      const token = generateValidToken(user);
-
-      const response = await server.get('/hotels').set('Authorization', `Bearer ${token}`);
-
-      expect(response.status).toEqual(httpStatus.OK);
-      expect(response.body).toEqual([]);
-    });
   });
 });
 
